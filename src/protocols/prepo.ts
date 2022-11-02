@@ -5,7 +5,7 @@ import { ProtocolDefinition } from "../types";
 export default {
   name: "prePO",
   description: "The Decentralized Exchange for Pre-IPO Stocks & Pre-IDO Tokens.",
-  logoUrl: "https://i.imgur.com/NNI5hnR.png",
+  logoUrl: "https://svgshare.com/i/now.svg",
   links: {
     governanceVote: "https://snapshot.org/#/prepo.eth",
     homepage: "https://prepo.io/",
@@ -20,7 +20,7 @@ export default {
     {
       name: "prePO Token",
       symbol: "PPO",
-      logoUrl: "https://imgur.com/NNI5hnR",
+      logoUrl: "https://i.imgur.com/NNI5hnR.png",
       priceSources: [{ source: "custom", customPriceFunction: CUSTOM_PRICE_FEEDS.PPO }],
       purchaseLinks: { [CHAIN_ID.ARBITRUM_MAINNET]: "https://sale.prepo.io/" },
       addresses: { [CHAIN_ID.ARBITRUM_MAINNET]: "0xB40DBBb7931Cfef8Be73AEEC6c67d3809bD4600B" },
