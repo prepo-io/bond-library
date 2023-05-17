@@ -33,6 +33,11 @@ export default {
           customPriceFunction: CUSTOM_PRICE_FEEDS.PPO,
           providerChainId: CHAIN_ID.ARBITRUM_MAINNET,
         },
+        {
+          source: "custom",
+          customPriceFunction: CUSTOM_PRICE_FEEDS.PPO_ETH,
+          providerChainId: CHAIN_ID.ARBITRUM_MAINNET,
+        },
       ],
       purchaseLinks: { [CHAIN_ID.ARBITRUM_MAINNET]: "https://sale.prepo.io/" },
       addresses: { [CHAIN_ID.ARBITRUM_MAINNET]: "0xB40DBBb7931Cfef8Be73AEEC6c67d3809bD4600B" },

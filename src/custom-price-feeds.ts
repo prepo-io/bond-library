@@ -8,6 +8,7 @@ export type CustomPriceFunction = (provider?: Provider) => Promise<number>;
 export enum CUSTOM_PRICE_FEEDS {
   US_STABLE = "us_stable",
   PPO = "PPO",
+  PPO_ETH = "PPO_ETH",
   CVOL = "CVOL",
 }
 
@@ -28,6 +29,22 @@ export default {
       const fixedPriceContract = new ethers.Contract(ORACLE_ADDRESS, ORACLE_ABI, provider);
 
       const priceBN = await fixedPriceContract.getFixedPrice();
+
+      if (priceBN) return +formatUnits(priceBN, PRICE_DECIMALS);
+    } catch (e) {
+      // @ts-ignore
+      throw new Error(e);
+    }
+  },
+  [CUSTOM_PRICE_FEEDS.PPO_ETH]: async (provider: Provider) => {
+    const ORACLE_ABI = ["function get() view returns (uint256)"];
+    const ORACLE_ADDRESS = "0x0fBBfd902a379b50E869f279758463Fc26Ac02ad";
+    const PRICE_DECIMALS = 18;
+
+    try {
+      const ethPriceContract = new ethers.Contract(ORACLE_ADDRESS, ORACLE_ABI, provider);
+
+      const priceBN = await ethPriceContract.get();
 
       if (priceBN) return +formatUnits(priceBN, PRICE_DECIMALS);
     } catch (e) {
