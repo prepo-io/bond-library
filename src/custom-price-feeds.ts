@@ -20,14 +20,14 @@ export enum CUSTOM_PRICE_FEEDS {
 export default {
   [CUSTOM_PRICE_FEEDS.US_STABLE]: async () => 1.0,
   [CUSTOM_PRICE_FEEDS.PPO]: async (provider: Provider) => {
-    const ORACLE_ABI = ["function getFixedPrice() view returns (uint256)"];
-    const ORACLE_ADDRESS = "0x503aef858e26C136C29e40483EA0297160d2BDC0";
-    const PRICE_DECIMALS = 6;
+    const ORACLE_ABI = ["function get() view returns (uint256)"];
+    const ORACLE_ADDRESS = "0x0fBBfd902a379b50E869f279758463Fc26Ac02ad";
+    const PRICE_DECIMALS = 18;
 
     try {
       const fixedPriceContract = new ethers.Contract(ORACLE_ADDRESS, ORACLE_ABI, provider);
 
-      const priceBN = await fixedPriceContract.getFixedPrice();
+      const priceBN = await fixedPriceContract.get();
 
       if (priceBN) return +formatUnits(priceBN, PRICE_DECIMALS);
     } catch (e) {
@@ -36,7 +36,10 @@ export default {
     }
   },
   [CUSTOM_PRICE_FEEDS.CVOL]: async (provider: Provider) => {
-    const TV_CVOL_TOKEN_ABI = ["function totalBalance() external view returns (uint256 balance, uint256 usdcPlatformLiquidity, uint256 intrinsicDEXVolTokenBalance, uint256 volTokenPositionBalance, uint256 dexUSDCAmount, uint256 dexVolTokensAmount)","function totalSupply() external view returns (uint)"];
+    const TV_CVOL_TOKEN_ABI = [
+      "function totalBalance() external view returns (uint256 balance, uint256 usdcPlatformLiquidity, uint256 intrinsicDEXVolTokenBalance, uint256 volTokenPositionBalance, uint256 dexUSDCAmount, uint256 dexVolTokensAmount)",
+      "function totalSupply() external view returns (uint)",
+    ];
     const TV_CVOL_TOKEN_ADDRESS = "0xFDeB59a2B4891ea17610EE38665249acC9FCC506";
     const TV_CVOL_DECIMALS = 18;
     const USDC_DECIMALS = 6;
@@ -44,15 +47,14 @@ export default {
     try {
       const tvCvolContract = new ethers.Contract(TV_CVOL_TOKEN_ADDRESS, TV_CVOL_TOKEN_ABI, provider);
 
-      const [{ balance }, supply] = await Promise.all([tvCvolContract.totalBalance(),tvCvolContract.totalSupply()]);
+      const [{ balance }, supply] = await Promise.all([tvCvolContract.totalBalance(), tvCvolContract.totalSupply()]);
 
       if (supply.isZero()) {
-        return 0
+        return 0;
       }
-      
-      const usdcAmountBN = ethers.utils.parseUnits("1",TV_CVOL_DECIMALS).mul(balance).div(supply)
-      return formatUnits(usdcAmountBN, USDC_DECIMALS)
 
+      const usdcAmountBN = ethers.utils.parseUnits("1", TV_CVOL_DECIMALS).mul(balance).div(supply);
+      return formatUnits(usdcAmountBN, USDC_DECIMALS);
     } catch (e) {
       // @ts-ignore
       throw new Error(e);
